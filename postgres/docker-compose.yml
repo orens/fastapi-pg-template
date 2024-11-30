@@ -1,0 +1,33 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    hostname: localhost
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: app
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    volumes:
+      - "./servers.json:/pgadmin4/servers.json:ro"
+      - "pgadmin-data:/var/lib/pgadmin"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  pgadmin-data:
